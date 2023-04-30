@@ -38,6 +38,7 @@ export const responseMessage = {
   LOGIN_SUCCESS: "Logged in successfully.",
   LOGGED_OUT: "Logged out successfully.",
   PROFILE_GET_SUCCESS: "Profile get successfully.",
+  PROFILE_UPDATED_SUCCESS: "Profile updated successfully.",
   USER_EXIST: "Username already taken. Please try another",
   USER_NOT_FOUND: "There is no any account associated with this username.",
   INCORRECT_PASSWORD: "Incorrect password.",
@@ -46,9 +47,16 @@ export const responseMessage = {
   OTP_EXPIRED: "OTP expired. Please resend.",
   INVALID_OTP: "Invalid OTP.",
   USERS: "Users",
+  FILE_UPLOADED: "Image uploaded successfully.",
+  FILE_NOT_FOUND: "Image not found.",
 };
 
 export const statusEnum = {
   ACTIVE: "active",
   INACTIVE: "inActive",
+};
+
+export const fileUploadConfig = {
+  FILE_SIZE: 5000000, //5MB
+  FILE_TYPES: /jpeg|jpg|png/, //5MB
 };

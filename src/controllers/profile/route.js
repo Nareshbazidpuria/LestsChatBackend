@@ -1,6 +1,9 @@
 import { Router } from "express";
-import { getProfile } from "./controller";
+import { getProfile, updateProfile } from "./controller";
+import { validate } from "express-validation";
+import { updateProfileValidation } from "./validation";
 
-export const profileRouter = Router()
+export const profileRouter = Router();
 
-profileRouter.get('/', getProfile)
+profileRouter.get("/", getProfile);
+profileRouter.put("/", validate(updateProfileValidation), updateProfile);

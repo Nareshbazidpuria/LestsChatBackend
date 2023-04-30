@@ -4,6 +4,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const path = require("path");
 const { connectDatabase } = require("./config/connectDb");
 const { authenticate } = require("./src/middleware/authenticate");
 const { apiRouter } = require("./src/routes/apiRoutes");
@@ -14,6 +15,7 @@ const {
   responseMethod,
 } = require("./src/utils/common");
 const { responseCode, responseMessage } = require("./config/constant");
+const { MulterError } = require("multer");
 
 const port = process.env.PORT;
 connectDatabase();
@@ -21,6 +23,7 @@ require("./src/utils/socket.io");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use(cors());
 app.use("/api", authenticate, apiRouter);
@@ -29,6 +32,15 @@ app.use("/pub", publicRouter);
 app.use(function (err, req, res, next) {
   if (err instanceof ValidationError) {
     return validationErrorMessageConverter(req, res, err);
+  }
+  if (err instanceof MulterError) {
+    return responseMethod(
+      res,
+      responseCode.BAD_REQUEST,
+      err?.message || responseMessage.BAD_REQUEST,
+      false,
+      {}
+    );
   }
   return responseMethod(
     res,
