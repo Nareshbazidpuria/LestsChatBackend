@@ -1,4 +1,4 @@
-import app, { response } from "../../app";
+import app from "../../app";
 import { socketAuthentictaion } from "../middleware/socketAuthentictaion";
 import Socket from "socket.io";
 const http = require("http").createServer(app);
@@ -15,26 +15,19 @@ export const io = Socket(http, {
 });
 
 io.use(async (socket, next) => {
-  const token = socket.handshake.auth.token;
-  let req = {
-    headers: { token },
-  };
-  await socketAuthentictaion(req, response, next);
+  const token = socket.handshake.auth.token || socket.handshake.headers.token;
+  const authenticated = await socketAuthentictaion(token);
+  if (authenticated) {
+    socket.user = authenticated;
+    next();
+  }
 });
 
 io.on("connection", (socket) => {
-  console.log("connected");
-  // setTimeout(() => {
-  //   socket.emit("FromAPI", { name: "dduiaw" });
-  // }, 5000);
-  // const deviceId = socket.handshake.headers?.deviceid;
-  // socket.join(deviceId);
-  socket.on("disconnect", () => {
-    console.log("disconnected");
+  socket.join("test");
+  socket.on("msg", (msg) => {
+    setTimeout(() => {
+      socket.in("test").emit("receive", msg);
+    }, 2000);
   });
-  // socket.on("sss", (data) => {
-  //   console.log(data);
-  // });
 });
-
-// io.broadcast()

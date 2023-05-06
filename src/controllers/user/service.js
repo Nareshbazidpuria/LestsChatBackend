@@ -1,13 +1,20 @@
 import { statusEnum } from "../../../config/constant";
 import { User } from "../../models/user";
 
-export const signUpService = (body) => {
-  return User.create(body);
-};
+export const signUpService = (user) => User.create(user);
 
-export const getUserService = (filter) => {
-  return User.findOne({ ...filter, status: statusEnum.ACTIVE });
-};
+export const getUserService = (filter) =>
+  User.findOne({ ...filter, status: statusEnum.ACTIVE });
+
+export const updateUserService = (filter, user) =>
+  User.findOneAndUpdate(filter, user, { new: true });
+
+export const addFriendService = (_id, friendId) =>
+  User.findOneAndUpdate(
+    { _id },
+    { $addToSet: { friends: friendId } },
+    { new: true }
+  );
 
 export const getAllUsersService = (limit, skip, sort, authId, search) => {
   return User.aggregate([
@@ -49,8 +56,4 @@ export const getAllUsersService = (limit, skip, sort, authId, search) => {
       },
     },
   ]);
-};
-
-export const updateUserService = (filter, body) => {
-  return User.findOneAndUpdate(filter, body, { new: true });
 };

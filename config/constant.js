@@ -49,6 +49,11 @@ export const responseMessage = {
   USERS: "Users",
   FILE_UPLOADED: "Image uploaded successfully.",
   FILE_NOT_FOUND: "Image not found.",
+  REQ_SENT: "Request sent.",
+  REQ_ALREADY_ACCEPTED: "Request already accepted.",
+  REQ_ACCEPTED: "Request accepted.",
+  MSG_SENT: "Message sent.",
+  MSGS: "Messages.",
 };
 
 export const statusEnum = {

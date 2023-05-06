@@ -19,6 +19,9 @@ const user = new Schema(
     email: {
       type: String,
     },
+    room: {
+      type: String,
+    },
     friends: {
       type: [ObjectId],
     },
