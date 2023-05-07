@@ -2,11 +2,11 @@ import { Joi } from "express-validation";
 
 export const signUpValidation = {
   body: Joi.object({
-    name: Joi.string().required().min(3).max(30),
+    name: Joi.string().required().min(3).max(16),
     userName: Joi.string()
       .required()
       .min(3)
-      .max(30)
+      .max(16)
       .regex(/^(?![0-9_])[a-z0-9_]{3,30}$/)
       .messages({
         "string.pattern.base":

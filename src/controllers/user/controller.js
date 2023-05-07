@@ -10,13 +10,21 @@ export const getAllUsers = async (req, res) => {
   try {
     const { limit, skip, sort } = getDefaultPagination(req?.query);
     const search = getSearchParams(req?.query);
-    const users = await getAllUsersService(
-      limit,
-      skip,
-      sort,
-      req.auth._id,
-      search
-    );
+    let users;
+    if (req?.query?.type === "friends") {
+      users = await getAllUsersService(limit, skip, sort, {
+        ...search,
+        _id: { $in: req.auth.friends },
+      });
+    } else {
+      users = await getAllUsersService(limit, skip, sort, {
+        ...search,
+        $and: [
+          { _id: { $ne: req.auth._id } },
+          { _id: { $nin: req.auth.friends } },
+        ],
+      });
+    }
     if (users[0]?.data?.length) {
       return responseMethod(
         res,

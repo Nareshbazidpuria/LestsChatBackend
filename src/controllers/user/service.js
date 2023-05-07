@@ -16,13 +16,12 @@ export const addFriendService = (_id, friendId) =>
     { new: true }
   );
 
-export const getAllUsersService = (limit, skip, sort, authId, search) => {
-  return User.aggregate([
+export const getAllUsersService = (limit, skip, sort, filter) =>
+  User.aggregate([
     {
       $match: {
+        ...filter,
         status: statusEnum.ACTIVE,
-        _id: { $ne: authId },
-        ...search,
       },
     },
     {
@@ -56,4 +55,3 @@ export const getAllUsersService = (limit, skip, sort, authId, search) => {
       },
     },
   ]);
-};

@@ -13,7 +13,7 @@ export const socketAuthentictaion = async (token) => {
     if (!auth) authenticated = false;
     return authenticated ? user : false;
   } catch (error) {
-    console.log(error);
+    console.log(error?.message);
     return false;
   }
 };

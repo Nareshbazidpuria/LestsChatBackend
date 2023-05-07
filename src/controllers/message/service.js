@@ -10,8 +10,8 @@ export const readMsgsService = (sentBy) =>
     { new: true }
   );
 
-export const getMsgsService = (limit, skip, roomId) => {
-  return Message.aggregate([
+export const getMsgsService = (limit, skip, roomId) =>
+  Message.aggregate([
     {
       $match: {
         roomId: ObjectId(roomId),
@@ -52,4 +52,3 @@ export const getMsgsService = (limit, skip, roomId) => {
       },
     },
   ]);
-};
