@@ -12,12 +12,12 @@ export const getAllUsers = async (req, res) => {
     const search = getSearchParams(req?.query);
     let users;
     if (req?.query?.type === "friends") {
-      users = await getAllUsersService(limit, skip, sort, {
+      users = await getAllUsersService(limit, skip, sort, req.auth._id, {
         ...search,
         _id: { $in: req.auth.friends },
       });
     } else {
-      users = await getAllUsersService(limit, skip, sort, {
+      users = await getAllUsersService(limit, skip, sort, req.auth._id, {
         ...search,
         $and: [
           { _id: { $ne: req.auth._id } },

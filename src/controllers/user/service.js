@@ -16,7 +16,7 @@ export const addFriendService = (_id, friendId) =>
     { new: true }
   );
 
-export const getAllUsersService = (limit, skip, sort, filter) =>
+export const getAllUsersService = (limit, skip, sort, authId, filter) =>
   User.aggregate([
     {
       $match: {
@@ -25,7 +25,61 @@ export const getAllUsersService = (limit, skip, sort, filter) =>
       },
     },
     {
-      $unset: ["password", "__v"],
+      $lookup: {
+        from: "requests",
+        let: { id: "$_id" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ["$by", "$$id"],
+              },
+              to: authId,
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+            },
+          },
+        ],
+        as: "reqReceived",
+      },
+    },
+    {
+      $lookup: {
+        from: "requests",
+        let: { id: "$_id" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ["$to", "$$id"],
+              },
+              by: authId,
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+            },
+          },
+        ],
+        as: "reqSent",
+      },
+    },
+    {
+      $set: {
+        reqReceived: {
+          $arrayElemAt: ["$reqReceived", 0],
+        },
+        reqSent: {
+          $arrayElemAt: ["$reqSent", 0],
+        },
+      },
+    },
+    {
+      $unset: ["password", "__v", "friends"],
     },
     {
       $sort: sort,

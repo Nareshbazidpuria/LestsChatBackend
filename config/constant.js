@@ -51,9 +51,12 @@ export const responseMessage = {
   FILE_NOT_FOUND: "Image not found.",
   REQ_SENT: "Request sent.",
   REQS: "Requests.",
-  REQ_ALREADY_ACCEPTED: "Request already accepted.",
   REQ_ALREADY_SENT: "Request already sent.",
   REQ_ACCEPTED: "Request accepted.",
+  REQ_ALREADY_ACCEPTED: "Request already accepted.",
+  REQ_REJECTED: "Request rejected.",
+  REQ_CANCELED: "Request canceled.",
+  REQ_ALREADY_REJECTED: "Request not found, it maybe already rejected.",
   MSG_SENT: "Message sent.",
   MSGS: "Messages.",
 };

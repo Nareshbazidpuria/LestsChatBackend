@@ -10,6 +10,7 @@ import {
   createRoomService,
   getReqService,
   getReqsService,
+  rejectReqService,
   sendReqService,
 } from "./service";
 
@@ -90,16 +91,6 @@ export const getRequests = async (req, res) => {
 
 export const confirmRequest = async (req, res) => {
   try {
-    const sentByYou = await getReqService({ by: req.auth._id });
-    if (sentByYou) {
-      return responseMethod(
-        res,
-        responseCode.BAD_REQUEST,
-        responseMessage.BAD_REQUEST,
-        false,
-        {}
-      );
-    }
     const alreadyConfirmed = await getReqService({
       _id: req.params.id,
       confirmed: true,
@@ -130,6 +121,39 @@ export const confirmRequest = async (req, res) => {
       res,
       responseCode.BAD_REQUEST,
       responseMessage.BAD_REQUEST,
+      false,
+      {}
+    );
+  } catch (error) {
+    console.log(error);
+    return responseMethod(
+      res,
+      responseCode.INTERNAL_SERVER_ERROR,
+      responseMessage.INTERNAL_SERVER_ERROR,
+      false,
+      {}
+    );
+  }
+};
+
+export const rejectRequest = async (req, res) => {
+  try {
+    const rejected = await rejectReqService({ _id: req.params.id });
+    if (rejected) {
+      return responseMethod(
+        res,
+        responseCode.OK,
+        req?.query?.type === "cancel"
+          ? responseMessage.REQ_CANCELED
+          : responseMessage.REQ_REJECTED,
+        true,
+        {}
+      );
+    }
+    return responseMethod(
+      res,
+      responseCode.BAD_REQUEST,
+      responseMessage.REQ_ALREADY_REJECTED,
       false,
       {}
     );

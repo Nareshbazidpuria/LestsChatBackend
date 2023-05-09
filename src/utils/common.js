@@ -62,6 +62,7 @@ export const getSearchParams = (query) => {
   if (query?.name) {
     search.$or.push({ userName: { $regex: query.name, $options: "i" } });
     search.$or.push({ name: { $regex: query.name, $options: "i" } });
+    search.$or.push({ email: { $regex: query.name, $options: "i" } });
   }
   return search.$or.length ? search : {};
 };

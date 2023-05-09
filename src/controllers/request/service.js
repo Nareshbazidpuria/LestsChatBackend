@@ -5,6 +5,8 @@ export const sendReqService = (request) => Request.create(request);
 
 export const getReqService = (filter) => Request.findOne(filter);
 
+export const rejectReqService = (filter) => Request.findOneAndDelete(filter);
+
 export const createRoomService = (room) => Room.create(room);
 
 export const confirmReqService = (_id) =>
