@@ -14,6 +14,8 @@ export const io = Socket(http, {
   },
 });
 
+export let socketIo;
+
 io.use(async (socket, next) => {
   const token = socket.handshake.auth.token || socket.handshake.headers.token;
   const authenticated = await socketAuthentictaion(token);
@@ -24,10 +26,8 @@ io.use(async (socket, next) => {
 });
 
 io.on("connection", (socket) => {
-  socket.join("test");
-  socket.on("msg", (msg) => {
-    setTimeout(() => {
-      socket.in("test").emit("receive", msg);
-    }, 2000);
+  socketIo = socket;
+  socket.on("message", ({ message, roomId }) => {
+    socket.in(roomId).emit("receive", { message, createdAt: new Date() });
   });
 });

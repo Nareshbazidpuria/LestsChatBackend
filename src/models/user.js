@@ -25,6 +25,9 @@ const user = new Schema(
     friends: {
       type: [ObjectId],
     },
+    lastJoined: {
+      type: String,
+    },
     status: {
       type: String,
       default: statusEnum.ACTIVE,

@@ -34,7 +34,7 @@ export const sendRequest = async (req, res) => {
         responseCode.CREATED,
         responseMessage.REQ_SENT,
         true,
-        {}
+        request
       );
     }
     return responseMethod(

@@ -1,5 +1,7 @@
 import { responseCode, responseMessage } from "../../../config/constant";
 import { getDefaultPagination, responseMethod } from "../../utils/common";
+import { socketIo } from "../../utils/socket.io";
+import { updateUserService } from "../user/service";
 import { getMsgsService, readMsgsService, sendMsgService } from "./service";
 
 export const sendMsg = async (req, res) => {
@@ -40,8 +42,30 @@ export const sendMsg = async (req, res) => {
 
 export const readMsgs = async (req, res) => {
   try {
+    if (!req?.params?.roomId) {
+      return responseMethod(
+        res,
+        responseCode.BAD_REQUEST,
+        responseMessage.BAD_REQUEST,
+        false,
+        {}
+      );
+    }
+    const roomId = req.params.roomId.toString();
+    if (req.auth.lastJoined) socketIo.leave(req.auth.lastJoined.toString());
+    socketIo.join(roomId);
+    if (roomId === "644d362526d8c8d7b063e6ca") {
+      return responseMethod(
+        res,
+        responseCode.OK,
+        responseMessage.MSGS,
+        false,
+        {}
+      );
+    }
     const { limit, skip } = getDefaultPagination(req?.query);
-    const msgs = await getMsgsService(limit, skip, req.params.roomId);
+    const msgs = await getMsgsService(limit, skip, roomId, req.auth._id);
+    await updateUserService({ _id: req.auth._id }, { lastJoined: roomId });
     if (msgs[0]?.data?.length) {
       await readMsgsService(req.auth._id);
       return responseMethod(

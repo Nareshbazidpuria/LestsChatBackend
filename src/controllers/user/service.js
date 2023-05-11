@@ -69,12 +69,45 @@ export const getAllUsersService = (limit, skip, sort, authId, filter) =>
       },
     },
     {
+      $lookup: {
+        from: "rooms",
+        let: { id: "$_id" },
+        pipeline: [
+          {
+            $match: {
+              $and: [
+                {
+                  $expr: {
+                    $in: ["$$id", "$members"],
+                  },
+                },
+                {
+                  $expr: {
+                    $in: [authId, "$members"],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+            },
+          },
+        ],
+        as: "room",
+      },
+    },
+    {
       $set: {
         reqReceived: {
           $arrayElemAt: ["$reqReceived", 0],
         },
         reqSent: {
           $arrayElemAt: ["$reqSent", 0],
+        },
+        room: {
+          $arrayElemAt: ["$room", 0],
         },
       },
     },

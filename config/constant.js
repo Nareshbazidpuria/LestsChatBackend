@@ -68,5 +68,17 @@ export const statusEnum = {
 
 export const fileUploadConfig = {
   FILE_SIZE: 5000000, //5MB
-  FILE_TYPES: /jpeg|jpg|png/, //5MB
+  FILE_TYPES: /jpeg|jpg|png/, 
+};
+
+export const MESSAGE_TYPE = {
+  INCOMMING: "incomming",
+  OUTGOING: "outgoing",
+};
+
+export const CONTENT_TYPE = {
+  TEXT: "text",
+  IMAGE: "image",
+  VIDEO: "video",
+  FILE: "file",
 };

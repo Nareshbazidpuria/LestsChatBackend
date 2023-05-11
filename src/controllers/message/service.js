@@ -1,5 +1,6 @@
 import { ObjectId } from "mongodb";
 import { Message } from "../../models/message";
+import { MESSAGE_TYPE } from "../../../config/constant";
 
 export const sendMsgService = (msg) => Message.create(msg);
 
@@ -10,7 +11,7 @@ export const readMsgsService = (sentBy) =>
     { new: true }
   );
 
-export const getMsgsService = (limit, skip, roomId) =>
+export const getMsgsService = (limit, skip, roomId, authId) =>
   Message.aggregate([
     {
       $match: {
@@ -20,6 +21,17 @@ export const getMsgsService = (limit, skip, roomId) =>
     {
       $sort: {
         createdAt: -1,
+      },
+    },
+    {
+      $addFields: {
+        type: {
+          $cond: [
+            { $eq: ["$sentBy", authId] },
+            MESSAGE_TYPE.OUTGOING,
+            MESSAGE_TYPE.INCOMMING,
+          ],
+        },
       },
     },
     {
