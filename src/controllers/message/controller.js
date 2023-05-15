@@ -54,6 +54,7 @@ export const readMsgs = async (req, res) => {
     const roomId = req.params.roomId.toString();
     if (req.auth.lastJoined) socketIo.leave(req.auth.lastJoined.toString());
     socketIo.join(roomId);
+    await updateUserService({ _id: req.auth._id }, { lastJoined: roomId });
     if (roomId === "644d362526d8c8d7b063e6ca") {
       return responseMethod(
         res,
@@ -65,7 +66,6 @@ export const readMsgs = async (req, res) => {
     }
     const { limit, skip } = getDefaultPagination(req?.query);
     const msgs = await getMsgsService(limit, skip, roomId, req.auth._id);
-    await updateUserService({ _id: req.auth._id }, { lastJoined: roomId });
     if (msgs[0]?.data?.length) {
       await readMsgsService(req.auth._id);
       return responseMethod(

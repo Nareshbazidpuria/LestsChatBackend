@@ -52,6 +52,7 @@ export const responseMessage = {
   REQ_SENT: "Request sent.",
   REQS: "Requests.",
   REQ_ALREADY_SENT: "Request already sent.",
+  REQ_ALREADY_RECEIVED: "Yoy have already received request from this user.",
   REQ_ACCEPTED: "Request accepted.",
   REQ_ALREADY_ACCEPTED: "Request already accepted.",
   REQ_REJECTED: "Request rejected.",
@@ -68,7 +69,7 @@ export const statusEnum = {
 
 export const fileUploadConfig = {
   FILE_SIZE: 5000000, //5MB
-  FILE_TYPES: /jpeg|jpg|png/, 
+  FILE_TYPES: /jpeg|jpg|png/,
 };
 
 export const MESSAGE_TYPE = {

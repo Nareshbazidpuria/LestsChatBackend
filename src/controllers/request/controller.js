@@ -27,6 +27,19 @@ export const sendRequest = async (req, res) => {
         {}
       );
     }
+    const alreadyReceived = await getReqService({
+      to: req.body.by,
+      by: req.body.to,
+    });
+    if (alreadyReceived) {
+      return responseMethod(
+        res,
+        responseCode.BAD_REQUEST,
+        responseMessage.REQ_ALREADY_RECEIVED,
+        false,
+        {}
+      );
+    }
     const request = await sendReqService(req.body);
     if (request) {
       return responseMethod(

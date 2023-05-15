@@ -20,7 +20,7 @@ io.use(async (socket, next) => {
   const token = socket.handshake.auth.token || socket.handshake.headers.token;
   const authenticated = await socketAuthentictaion(token);
   if (authenticated) {
-    socket.user = authenticated;
+    socket.auth = authenticated;
     next();
   }
 });
