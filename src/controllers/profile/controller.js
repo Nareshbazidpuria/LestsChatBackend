@@ -1,10 +1,11 @@
 import { responseCode, responseMessage } from "../../../config/constant";
 import { responseMethod } from "../../utils/common";
-import { getUserService, updateUserService } from "../user/service";
+import { updateUserService } from "../user/service";
 
 export const getProfile = async (req, res) => {
   try {
     delete req.auth._doc.password;
+    req.auth._doc.friends = req.auth.friends?.length;
     return responseMethod(
       res,
       responseCode.OK,

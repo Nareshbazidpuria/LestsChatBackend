@@ -1,4 +1,4 @@
-import { statusEnum } from "../../../config/constant";
+import { MESSAGE_TYPE, statusEnum } from "../../../config/constant";
 import { User } from "../../models/user";
 
 export const signUpService = (user) => User.create(user);
@@ -16,11 +16,12 @@ export const addFriendService = (_id, friendId) =>
     { new: true }
   );
 
-export const getAllUsersService = (limit, skip, sort, authId, filter) =>
+export const getAllUsersService = (limit, skip, sort, auth, search) =>
   User.aggregate([
     {
       $match: {
-        ...filter,
+        ...search,
+        $and: [{ _id: { $ne: auth._id } }, { _id: { $nin: auth.friends } }],
         status: statusEnum.ACTIVE,
       },
     },
@@ -34,7 +35,7 @@ export const getAllUsersService = (limit, skip, sort, authId, filter) =>
               $expr: {
                 $eq: ["$by", "$$id"],
               },
-              to: authId,
+              to: auth._id,
             },
           },
           {
@@ -56,7 +57,7 @@ export const getAllUsersService = (limit, skip, sort, authId, filter) =>
               $expr: {
                 $eq: ["$to", "$$id"],
               },
-              by: authId,
+              by: auth._id,
             },
           },
           {
@@ -66,6 +67,57 @@ export const getAllUsersService = (limit, skip, sort, authId, filter) =>
           },
         ],
         as: "reqSent",
+      },
+    },
+    {
+      $set: {
+        reqReceived: {
+          $arrayElemAt: ["$reqReceived", 0],
+        },
+        reqSent: {
+          $arrayElemAt: ["$reqSent", 0],
+        },
+      },
+    },
+    {
+      $unset: ["password", "__v", "friends"],
+    },
+    {
+      $sort: sort,
+    },
+    {
+      $facet: {
+        data: [
+          {
+            $skip: skip,
+          },
+          {
+            $limit: limit,
+          },
+        ],
+        totalRecords: [
+          {
+            $count: "count",
+          },
+        ],
+      },
+    },
+    {
+      $set: {
+        totalRecords: {
+          $ifNull: [{ $arrayElemAt: ["$totalRecords.count", 0] }, 0],
+        },
+      },
+    },
+  ]);
+
+export const getFriendsService = (limit, skip, sort, auth, search) =>
+  User.aggregate([
+    {
+      $match: {
+        ...search,
+        _id: { $in: auth.friends },
+        status: statusEnum.ACTIVE,
       },
     },
     {
@@ -83,7 +135,7 @@ export const getAllUsersService = (limit, skip, sort, authId, filter) =>
                 },
                 {
                   $expr: {
-                    $in: [authId, "$members"],
+                    $in: [auth._id, "$members"],
                   },
                 },
               ],
@@ -94,18 +146,56 @@ export const getAllUsersService = (limit, skip, sort, authId, filter) =>
               _id: 1,
             },
           },
+          {
+            $lookup: {
+              from: "messages",
+              let: { id: "$_id" },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $eq: ["$roomId", "$$id"],
+                    },
+                  },
+                },
+                {
+                  $sort: {
+                    createdAt: -1,
+                  },
+                },
+                {
+                  $limit: 1,
+                },
+                {
+                  $project: {
+                    createdAt: 1,
+                    message: 1,
+                    type: {
+                      $cond: [
+                        { $eq: ["$sentBy", auth._id] },
+                        MESSAGE_TYPE.OUTGOING,
+                        MESSAGE_TYPE.INCOMMING,
+                      ],
+                    },
+                  },
+                },
+              ],
+              as: "lastMessage",
+            },
+          },
+          {
+            $set: {
+              lastMessage: {
+                $arrayElemAt: ["$lastMessage", 0],
+              },
+            },
+          },
         ],
         as: "room",
       },
     },
     {
       $set: {
-        reqReceived: {
-          $arrayElemAt: ["$reqReceived", 0],
-        },
-        reqSent: {
-          $arrayElemAt: ["$reqSent", 0],
-        },
         room: {
           $arrayElemAt: ["$room", 0],
         },
