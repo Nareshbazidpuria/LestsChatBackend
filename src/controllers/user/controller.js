@@ -1,4 +1,5 @@
 import { responseCode, responseMessage } from "../../../config/constant";
+import { ObjectId } from "mongodb";
 import {
   getDefaultPagination,
   getSearchParams,
@@ -7,7 +8,7 @@ import {
 import {
   getAllUsersService,
   getFriendsService,
-  getUserService,
+  getUserInfoService,
 } from "./service";
 
 export const getAllUsers = async (req, res) => {
@@ -50,15 +51,17 @@ export const getAllUsers = async (req, res) => {
 
 export const getUser = async (req, res) => {
   try {
-    if (user) {
-      delete user?._doc?.password;
-      user._doc.friends = user._doc.friends?.length;
+    let user = await getUserInfoService(
+      { _id: ObjectId(req?.params?.id) },
+      req.auth
+    );
+    if (user?.length) {
       return responseMethod(
         res,
         responseCode.OK,
         responseMessage.PROFILE_GET_SUCCESS,
         true,
-        user
+        user[0]
       );
     }
     return responseMethod(

@@ -6,6 +6,106 @@ export const signUpService = (user) => User.create(user);
 export const getUserService = (filter) =>
   User.findOne({ ...filter, status: statusEnum.ACTIVE });
 
+export const getUserInfoService = (filter, auth) =>
+  User.aggregate([
+    { $match: { ...filter, status: statusEnum.ACTIVE } },
+    {
+      $lookup: {
+        from: "rooms",
+        let: { id: "$_id" },
+        pipeline: [
+          {
+            $match: {
+              $and: [
+                {
+                  $expr: {
+                    $in: ["$$id", "$members"],
+                  },
+                },
+                {
+                  $expr: {
+                    $in: [auth._id, "$members"],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+            },
+          },
+        ],
+        as: "room",
+      },
+    },
+    {
+      $lookup: {
+        from: "requests",
+        let: { id: "$_id" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ["$by", "$$id"],
+              },
+              to: auth._id,
+              confirmed: false,
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+            },
+          },
+        ],
+        as: "reqReceived",
+      },
+    },
+    {
+      $lookup: {
+        from: "requests",
+        let: { id: "$_id" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ["$to", "$$id"],
+              },
+              by: auth._id,
+              confirmed: false,
+            },
+          },
+          {
+            $project: {
+              _id: 1,
+            },
+          },
+        ],
+        as: "reqSent",
+      },
+    },
+    {
+      $set: {
+        reqReceived: {
+          $arrayElemAt: ["$reqReceived", 0],
+        },
+        reqSent: {
+          $arrayElemAt: ["$reqSent", 0],
+        },
+        room: {
+          $arrayElemAt: ["$room", 0],
+        },
+        friends: {
+          $size: "$friends",
+        },
+      },
+    },
+    {
+      $unset: ["password"],
+    },
+  ]);
+
 export const updateUserService = (filter, user) =>
   User.findOneAndUpdate(filter, user, { new: true });
 
