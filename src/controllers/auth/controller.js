@@ -15,6 +15,7 @@ import {
 } from "../user/service";
 import { logoutAllService, logoutService, userLoginService } from "./service";
 import { responseCode, responseMessage } from "../../../config/constant";
+import { readFileSync } from "fs";
 
 export const signUp = async (req, res) => {
   try {
@@ -32,7 +33,14 @@ export const signUp = async (req, res) => {
     }
     req.body.password = await hashPassword(req.body.password?.trim());
     const user = await signUpService(req.body);
+    let html = readFileSync("./public/templates/welcome.html", "utf-8");
+    html = html.replace("{name}", user.name);
     if (user) {
+      sendEmail({
+        to: user?.email,
+        subject: "Welcome to Let's Chat",
+        html,
+      });
       return responseMethod(
         res,
         responseCode.CREATED,
