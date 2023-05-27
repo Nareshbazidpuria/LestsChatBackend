@@ -58,6 +58,7 @@ export const responseMessage = {
   REQ_REJECTED: "Request rejected.",
   REQ_CANCELED: "Request canceled.",
   REQ_ALREADY_REJECTED: "Request not found, it maybe already rejected.",
+  UNFRIEND: "This user has been removed from your friend list.",
   MSG_SENT: "Message sent.",
   MSGS: "Messages.",
 };

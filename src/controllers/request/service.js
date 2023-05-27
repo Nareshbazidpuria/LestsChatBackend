@@ -5,9 +5,13 @@ export const sendReqService = (request) => Request.create(request);
 
 export const getReqService = (filter) => Request.findOne(filter);
 
-export const rejectReqService = (filter) => Request.findOneAndDelete(filter);
+export const deleteReqService = (filter) => Request.findOneAndDelete(filter);
 
 export const createRoomService = (room) => Room.create(room);
+
+export const getRoomService = (filter) => Room.findOne(filter);
+
+export const deleteRoomService = (filter) => Room.findOneAndDelete(filter);
 
 export const confirmReqService = (_id) =>
   Request.findOneAndUpdate({ _id }, { confirmed: true }, { new: true });

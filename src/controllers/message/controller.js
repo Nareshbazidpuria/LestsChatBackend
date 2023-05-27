@@ -1,6 +1,7 @@
 import { responseCode, responseMessage } from "../../../config/constant";
 import { getDefaultPagination, responseMethod } from "../../utils/common";
 import { socketIo } from "../../utils/socket.io";
+import { getRoomService } from "../request/service";
 import { updateUserService } from "../user/service";
 import { getMsgsService, readMsgsService, sendMsgService } from "./service";
 
@@ -13,6 +14,19 @@ export const sendMsg = async (req, res) => {
     };
     const message = await sendMsgService(msg);
     if (message) {
+      const room = await getRoomService({ _id: req.params.roomId });
+      const setnTo = JSON.parse(JSON.stringify(room?.members))?.filter(
+        (id) => id !== req.auth._id.toString()
+      )[0];
+
+      socketIo.in(setnTo).emit("msgNotification", {
+        message,
+        by: {
+          name: req.auth.name,
+          _id: req.auth._id,
+          profilePic: req.auth.profilePic,
+        },
+      });
       return responseMethod(
         res,
         responseCode.CREATED,
@@ -55,7 +69,7 @@ export const readMsgs = async (req, res) => {
     if (req.auth.lastJoined) socketIo.leave(req.auth.lastJoined.toString());
     socketIo.join(roomId);
     await updateUserService({ _id: req.auth._id }, { lastJoined: roomId });
-    if (roomId === "644d362526d8c8d7b063e6ca") {
+    if (roomId === "644d362526d8c8d7b063e6cb") {
       return responseMethod(
         res,
         responseCode.OK,

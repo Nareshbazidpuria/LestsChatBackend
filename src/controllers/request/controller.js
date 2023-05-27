@@ -8,9 +8,9 @@ import { addFriendService } from "../user/service";
 import {
   confirmReqService,
   createRoomService,
+  deleteReqService,
   getReqService,
   getReqsService,
-  rejectReqService,
   sendReqService,
 } from "./service";
 
@@ -151,7 +151,7 @@ export const confirmRequest = async (req, res) => {
 
 export const rejectRequest = async (req, res) => {
   try {
-    const rejected = await rejectReqService({ _id: req.params.id });
+    const rejected = await deleteReqService({ _id: req.params.id });
     if (rejected) {
       return responseMethod(
         res,

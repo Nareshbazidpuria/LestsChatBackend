@@ -332,3 +332,10 @@ export const getFriendsService = (limit, skip, sort, auth, search) =>
       },
     },
   ]);
+
+export const unFriendService = (ids) =>
+  User.updateMany(
+    { _id: { $in: ids } },
+    { $pull: { friends: { $in: ids } } },
+    { new: true }
+  );

@@ -64,3 +64,5 @@ export const getMsgsService = (limit, skip, roomId, authId) =>
       },
     },
   ]);
+
+export const deleteAllMsgsService = (filter) => Message.deleteMany(filter);
