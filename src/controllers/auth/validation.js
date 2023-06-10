@@ -37,3 +37,10 @@ export const setPasswordValidation = {
     password: Joi.string().required(),
   }),
 };
+
+export const changePasswordValidation = {
+  body: Joi.object({
+    currentPassword: Joi.string().required(),
+    newPassword: Joi.string().required(),
+  }),
+};

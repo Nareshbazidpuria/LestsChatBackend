@@ -43,6 +43,7 @@ export const responseMessage = {
   USER_EXIST: "Username already taken. Please try another",
   USER_NOT_FOUND: "There is no any account associated with this username.",
   INCORRECT_PASSWORD: "Incorrect password.",
+  ACCOUNT_DELETED: "Your account has been deleted successfully.",
   PASSWORD_CHANGED: "Password changed successfully.",
   OTP_SENT: "OTP sent successfully.",
   OTP_EXPIRED: "OTP expired. Please resend.",

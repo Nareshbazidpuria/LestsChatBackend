@@ -6,6 +6,8 @@ export const signUpService = (user) => User.create(user);
 export const getUserService = (filter) =>
   User.findOne({ ...filter, status: statusEnum.ACTIVE });
 
+export const deleteUserService = (filter) => User.findOneAndDelete(filter);
+
 export const getUserInfoService = (filter, auth) =>
   User.aggregate([
     { $match: { ...filter, status: statusEnum.ACTIVE } },

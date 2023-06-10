@@ -134,7 +134,7 @@ export const setPreferences = async (req, res) => {
   try {
     const preferences = await updateUserService(
       { _id: req.auth._id },
-      { preferences: req.body.preferences }
+      { preferences: req.body }
     );
     if (preferences) {
       return responseMethod(

@@ -9,6 +9,7 @@ import jwt_decode from "jwt-decode";
 import { sendEmail } from "../../utils/mailer";
 import { generateOtp, responseMethod } from "../../utils/common";
 import {
+  deleteUserService,
   getUserService,
   signUpService,
   updateUserService,
@@ -241,6 +242,83 @@ export const setPassword = async (req, res) => {
       responseCode.OK,
       responseMessage.PASSWORD_CHANGED,
       true,
+      {}
+    );
+  } catch (error) {
+    console.log(error);
+    return responseMethod(
+      res,
+      responseCode.INTERNAL_SERVER_ERROR,
+      responseMessage.INTERNAL_SERVER_ERROR,
+      false,
+      {}
+    );
+  }
+};
+
+export const changePassword = async (req, res) => {
+  try {
+    const user = await getUserService({ _id: req.auth._id });
+    const matched = await comparePassword(
+      req.body.currentPassword,
+      user.password
+    );
+    if (!matched) {
+      return responseMethod(
+        res,
+        responseCode.BAD_REQUEST,
+        responseMessage.INCORRECT_PASSWORD,
+        false,
+        {}
+      );
+    }
+    const password = await hashPassword(req.body.newPassword);
+    const updated = await updateUserService({ _id: user?._id }, { password });
+    if (updated) {
+      return responseMethod(
+        res,
+        responseCode.OK,
+        responseMessage.PASSWORD_CHANGED,
+        true,
+        {}
+      );
+    }
+    return responseMethod(
+      res,
+      responseCode.BAD_REQUEST,
+      responseMessage.BAD_REQUEST,
+      false,
+      {}
+    );
+  } catch (error) {
+    console.log(error);
+    return responseMethod(
+      res,
+      responseCode.INTERNAL_SERVER_ERROR,
+      responseMessage.INTERNAL_SERVER_ERROR,
+      false,
+      {}
+    );
+  }
+};
+
+export const deleteAccount = async (req, res) => {
+  try {
+    const deleted = await deleteUserService({ _id: req.auth._id });
+    if (deleted) {
+      return responseMethod(
+        res,
+        responseCode.OK,
+        responseMessage.ACCOUNT_DELETED,
+        true,
+        {}
+      );
+    }
+    return responseMethod(
+      res,
+      responseCode.BAD_REQUEST,
+      responseMessage.BAD_REQUEST,
+      false,
       {}
     );
   } catch (error) {

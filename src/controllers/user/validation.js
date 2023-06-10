@@ -14,15 +14,13 @@ export const getUsersValidation = {
 
 export const setPreferenceValidation = {
   body: Joi.object({
-    preferences: Joi.object({
-      darkMode: Joi.boolean().required(),
-      showEmail: Joi.boolean().required(),
-      showProfilePic: Joi.string()
-        .required()
-        .valid(...Object.values(SHOW_PROFILE_PIC)),
-      emoji: Joi.string()
-        .required()
-        .valid(...Object.values(EMOJI_TYPE)),
-    }).required(),
+    darkMode: Joi.boolean().required(),
+    showEmail: Joi.boolean().required(),
+    showProfilePic: Joi.string()
+      .required()
+      .valid(...Object.values(SHOW_PROFILE_PIC)),
+    emoji: Joi.string()
+      .required()
+      .valid(...Object.values(EMOJI_TYPE)),
   }),
 };
