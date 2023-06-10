@@ -13,7 +13,7 @@ export const sendEmail = (payload) => {
   return new Promise((resolve, reject) => {
     transporter.sendMail(
       {
-        from: process.env.MAILER_USER,
+        from: `Support Let's Chat <${process.env.MAILER_USER}>`,
         to,
         text,
         html,

@@ -10,6 +10,7 @@ import {
   getFriendsService,
   getUserInfoService,
   unFriendService,
+  updateUserService,
 } from "./service";
 import { deleteReqService, deleteRoomService } from "../request/service";
 import { deleteAllMsgsService } from "../message/service";
@@ -109,6 +110,40 @@ export const unfriend = async (req, res) => {
           {}
         );
       }
+    }
+    return responseMethod(
+      res,
+      responseCode.BAD_REQUEST,
+      responseMessage.BAD_REQUEST,
+      false,
+      {}
+    );
+  } catch (error) {
+    console.log(error);
+    return responseMethod(
+      res,
+      responseCode.INTERNAL_SERVER_ERROR,
+      responseMessage.INTERNAL_SERVER_ERROR,
+      false,
+      {}
+    );
+  }
+};
+
+export const setPreferences = async (req, res) => {
+  try {
+    const preferences = await updateUserService(
+      { _id: req.auth._id },
+      { preferences: req.body.preferences }
+    );
+    if (preferences) {
+      return responseMethod(
+        res,
+        responseCode.OK,
+        responseMessage.PREFERENCES_UPDATED,
+        true,
+        {}
+      );
     }
     return responseMethod(
       res,

@@ -39,6 +39,7 @@ export const responseMessage = {
   LOGGED_OUT: "Logged out successfully.",
   PROFILE_GET_SUCCESS: "Profile get successfully.",
   PROFILE_UPDATED_SUCCESS: "Profile updated successfully.",
+  PREFERENCES_UPDATED: "Preferences updated successfully.",
   USER_EXIST: "Username already taken. Please try another",
   USER_NOT_FOUND: "There is no any account associated with this username.",
   INCORRECT_PASSWORD: "Incorrect password.",
@@ -83,4 +84,18 @@ export const CONTENT_TYPE = {
   IMAGE: "image",
   VIDEO: "video",
   FILE: "file",
+};
+
+export const SHOW_PROFILE_PIC = {
+  ALL: "all",
+  FRIENDS: "friends",
+  ONLY_ME: "onlyMe",
+};
+
+export const EMOJI_TYPE = {
+  FACEBOOK: "facebook",
+  NATIVE: "native",
+  APPLE: "apple",
+  TWITTER: "twitter",
+  GOOGLE: "google",
 };
