@@ -27,3 +27,4 @@ publicRouter.post(
   validate(setPasswordValidation),
   setPassword
 );
+publicRouter.get("/", (req, res) => res.send("Welcome to Lests Chat"));

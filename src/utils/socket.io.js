@@ -1,4 +1,4 @@
-import app from "../../app";
+import app from "../..";
 import { socketAuthentictaion } from "../middleware/socketAuthentictaion";
 import Socket from "socket.io";
 const http = require("http").createServer(app);
