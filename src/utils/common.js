@@ -1,15 +1,13 @@
-export const responseMethod = (res, status, message, success, data) => {
-  return res.status(status).send({
-    success: success,
-    status: status,
-    message: message,
-    data: data,
+export const responseMethod = (res, status, message, success, data) =>
+  res?.status(status)?.send({
+    success,
+    status,
+    message,
+    data,
   });
-};
 
-export const capitalizeFirstLetter = (str) => {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-};
+export const capitalizeFirstLetter = (str = "") =>
+  str.charAt(0).toUpperCase() + str.slice(1);
 
 export const errorMessageConverter = (msg) => {
   if (msg[0] === '"') {
