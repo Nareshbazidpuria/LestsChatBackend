@@ -1,4 +1,10 @@
-export const responseMethod = (res, status, message, success, data) =>
+export const responseMethod = (
+  res,
+  status,
+  message,
+  success = false,
+  data = {}
+) =>
   res?.status(status)?.send({
     success,
     status,
@@ -26,17 +32,13 @@ export const validationErrorMessageConverter = (req, res, err) => {
     return responseMethod(
       res,
       err?.statusCode,
-      errorMessageConverter(err?.details?.body[0]?.message),
-      false,
-      {}
+      errorMessageConverter(err?.details?.body[0]?.message)
     );
   } else if (err?.details?.query?.length) {
     return responseMethod(
       res,
       err?.statusCode,
-      errorMessageConverter(err?.details?.query[0]?.message),
-      false,
-      {}
+      errorMessageConverter(err?.details?.query[0]?.message)
     );
   }
   return responseMethod(res, 400, "Validation error", false, {});

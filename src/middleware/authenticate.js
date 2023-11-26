@@ -11,9 +11,7 @@ export const authenticate = async (req, res, next) => {
       return responseMethod(
         res,
         responseCode.UNAUTHORIZED,
-        responseMessage.TOKEN_NOT_PROVIDED,
-        false,
-        {}
+        responseMessage.TOKEN_NOT_PROVIDED
       );
     }
     const credentials = jwt_decode(token);
@@ -22,9 +20,7 @@ export const authenticate = async (req, res, next) => {
       return responseMethod(
         res,
         responseCode.UNAUTHORIZED,
-        responseMessage.INVALID_TOKEN,
-        false,
-        {}
+        responseMessage.INVALID_TOKEN
       );
     }
     const auth = await getAuthService({ userId: credentials.userId });
@@ -32,9 +28,7 @@ export const authenticate = async (req, res, next) => {
       return responseMethod(
         res,
         responseCode.UNAUTHORIZED,
-        responseMessage.AUTHENTICATION_FAILED,
-        false,
-        {}
+        responseMessage.AUTHENTICATION_FAILED
       );
     }
     req.auth = user;
@@ -44,9 +38,7 @@ export const authenticate = async (req, res, next) => {
     return responseMethod(
       res,
       responseCode.INTERNAL_SERVER_ERROR,
-      responseMessage.INTERNAL_SERVER_ERROR,
-      false,
-      {}
+      responseMessage.INTERNAL_SERVER_ERROR
     );
   }
 };

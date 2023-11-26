@@ -29,7 +29,7 @@ app.use(cors());
 app.use("/api", authenticate, apiRouter);
 app.use("/pub", publicRouter);
 
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   if (err instanceof ValidationError) {
     return validationErrorMessageConverter(req, res, err);
   }
@@ -37,17 +37,13 @@ app.use(function (err, req, res, next) {
     return responseMethod(
       res,
       responseCode.BAD_REQUEST,
-      err?.message || responseMessage.BAD_REQUEST,
-      false,
-      {}
+      err?.message || responseMessage.BAD_REQUEST
     );
   }
   return responseMethod(
     res,
     responseCode.INTERNAL_SERVER_ERROR,
-    responseMessage.INTERNAL_SERVER_ERROR,
-    false,
-    {}
+    responseMessage.INTERNAL_SERVER_ERROR
   );
 });
 

@@ -5,6 +5,7 @@ import { userRouter } from "../controllers/user/route";
 import { genericRouter } from "../controllers/generic/route";
 import { reqRouter } from "../controllers/request/route";
 import { msgRouter } from "../controllers/message/route";
+import { storyRouter } from "../controllers/story/route";
 
 export const apiRouter = Router();
 
@@ -14,3 +15,4 @@ apiRouter.use("/user", userRouter);
 apiRouter.use("/generic", genericRouter);
 apiRouter.use("/request", reqRouter);
 apiRouter.use("/message", msgRouter);
+apiRouter.use("/story", storyRouter);

@@ -18,9 +18,7 @@ export const getProfile = async (req, res) => {
     return responseMethod(
       res,
       responseCode.INTERNAL_SERVER_ERROR,
-      responseMessage.INTERNAL_SERVER_ERROR,
-      false,
-      {}
+      responseMessage.INTERNAL_SERVER_ERROR
     );
   }
 };
