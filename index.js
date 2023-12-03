@@ -19,15 +19,17 @@ const { MulterError } = require("multer");
 
 const port = process.env.PORT;
 connectDatabase();
-// require("./src/utils/socket.io");
+require("./src/utils/socket.io");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(cors());
-app.use("/api", authenticate, apiRouter);
 app.use("/pub", publicRouter);
+app.use("/api", authenticate, apiRouter);
+app.use("/mob/pub", publicRouter);
+app.use("/mob/api", authenticate, apiRouter);
 
 app.use((err, req, res, next) => {
   if (err instanceof ValidationError) {

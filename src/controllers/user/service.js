@@ -182,10 +182,17 @@ export const getAllUsersService = (limit, skip, sort, auth, search) =>
       },
     },
     {
-      $unset: ["password", "__v", "friends"],
+      $sort: sort,
     },
     {
-      $sort: sort,
+      $unset: [
+        "password",
+        "__v",
+        "friends",
+        "preferences",
+        "createdAt",
+        "updatedAt",
+      ],
     },
     {
       $facet: {
@@ -304,10 +311,17 @@ export const getFriendsService = (limit, skip, sort, auth, search) =>
       },
     },
     {
-      $unset: ["password", "__v", "friends"],
+      $sort: sort,
     },
     {
-      $sort: sort,
+      $unset: [
+        "password",
+        "__v",
+        "friends",
+        "preferences",
+        "createdAt",
+        "updatedAt",
+      ],
     },
     {
       $facet: {
