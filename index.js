@@ -19,7 +19,7 @@ const { MulterError } = require("multer");
 
 const port = process.env.PORT;
 connectDatabase();
-require("./src/utils/socket.io");
+// require("./src/utils/socket.io");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
