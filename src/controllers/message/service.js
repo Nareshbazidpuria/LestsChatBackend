@@ -5,7 +5,7 @@ import { MESSAGE_TYPE } from "../../../config/constant";
 export const sendMsgService = (msg) => Message.create(msg);
 
 export const readMsgsService = (sentBy) =>
-  Message.findOneAndUpdate(
+  Message.updateMany(
     { sentBy: { $ne: sentBy }, read: false },
     { read: true },
     { new: true }

@@ -1,4 +1,5 @@
 import app from "../..";
+import { sendMessage } from "../controllers/message/controller";
 import { socketAuthentictaion } from "../middleware/socketAuthentictaion";
 import Socket from "socket.io";
 const http = require("http").createServer(app);
@@ -28,9 +29,15 @@ io.use(async (socket, next) => {
 io.on("connection", (socket) => {
   socketIo = socket;
   socket.join(socket.auth._id.toString());
-  socket.on("message", ({ message, roomId }) => {
-    socket.in(roomId).emit("receive", { message, createdAt: new Date() });
+  socket.on("message", async ({ message, roomId }) => {
+    const sent = await sendMessage({
+      message,
+      roomId,
+      sentBy: socket.auth._id,
+    });
+    if (sent) socket.in(roomId).emit("receive", sent);
   });
+
   // socket.emit("me", socket.id);
   // socket.on("callEnded", () => {
   //   socket.broadcast.emit("callEnded");
@@ -45,4 +52,7 @@ io.on("connection", (socket) => {
   // socket.on("answerCall", (data) => {
   //   io.to(data.to).emit("callAccepted", data.signal);
   // });
+
+  socket.on("join", (roomId) => socket.join(roomId));
+  socket.on("leave", (roomId) => socket.leave(roomId));
 });
