@@ -97,7 +97,11 @@ export const login = async (req, res) => {
       );
     }
     const accessToken = await generateToken({ userId: user._id });
-    const auth = await userLoginService({ userId: user._id, accessToken });
+    const auth = await userLoginService({
+      userId: user._id,
+      accessToken,
+      expoToken: req.body.expoToken,
+    });
     if (!auth) {
       return responseMethod(
         res,

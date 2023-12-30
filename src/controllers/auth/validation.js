@@ -20,6 +20,7 @@ export const signUpValidation = {
 export const loginValidation = {
   body: Joi.object({
     userName: Joi.string().required(),
+    expoToken: Joi.string(),
     password: Joi.string().required(),
   }),
 };

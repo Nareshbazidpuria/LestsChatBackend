@@ -9,6 +9,9 @@ const auth = new Schema(
     accessToken: {
       type: String,
     },
+    expoToken: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
