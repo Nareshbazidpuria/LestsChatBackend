@@ -13,6 +13,8 @@ const message = new Schema(
     message: {
       type: String,
     },
+    height: Number,
+    width: Number,
     contentType: {
       type: String,
       enum: Object.values(CONTENT_TYPE),

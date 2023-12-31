@@ -35,9 +35,9 @@ io.on("connection", (socket) => {
   socket.on("message", async ({ message, roomId }) => {
     const sent =
       roomId === "644d362526d8c8d7b063e6cb"
-        ? { message, roomId, sentBy: socket.auth._id }
+        ? { ...message, roomId, sentBy: socket.auth._id }
         : await sendMessage({
-            message,
+            ...message,
             roomId,
             sentBy: socket.auth._id,
           });
@@ -50,7 +50,7 @@ io.on("connection", (socket) => {
       sendNotification({
         to,
         title: socket.auth.name + " sent a message",
-        body: message,
+        body: message?.message,
         sound: "default",
       })
         .then(() => "sent")
