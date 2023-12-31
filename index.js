@@ -26,6 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(cors());
+app.use("/", (_, res) => res.send("Welcome to Let's Chat"));
 app.use("/pub", publicRouter);
 app.use("/api", authenticate, apiRouter);
 app.use("/mob/pub", publicRouter);
