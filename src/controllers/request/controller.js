@@ -11,6 +11,7 @@ import {
   deleteReqService,
   getReqService,
   getReqsService,
+  getRoomService,
   sendReqService,
 } from "./service";
 
@@ -178,6 +179,51 @@ export const rejectRequest = async (req, res) => {
       responseMessage.INTERNAL_SERVER_ERROR,
       false,
       {}
+    );
+  }
+};
+
+export const scanQr = async (req, res) => {
+  try {
+    const by = req.auth._id,
+      to = req.body.to;
+    if (to?.toString() === by?.toString())
+      return responseMethod(
+        res,
+        responseCode.BAD_REQUEST,
+        "You cannot add yoursef",
+        true
+      );
+    const alreadyFriends = await getRoomService({
+      members: { $all: [to, by] },
+    });
+    if (alreadyFriends)
+      return responseMethod(
+        res,
+        responseCode.OK,
+        "You are already friends",
+        true,
+        alreadyFriends
+      );
+    const [room] = await Promise.all([
+      createRoomService({ members: [to, by] }),
+      addFriendService(to, by),
+      addFriendService(by, to),
+    ]);
+    if (room)
+      return responseMethod(
+        res,
+        responseCode.OK,
+        "You are now friends",
+        true,
+        room
+      );
+  } catch (error) {
+    console.log(error);
+    return responseMethod(
+      res,
+      responseCode.INTERNAL_SERVER_ERROR,
+      responseMessage.INTERNAL_SERVER_ERROR
     );
   }
 };

@@ -92,7 +92,7 @@ export const unfriend = async (req, res) => {
     const removed = await unFriendService([req.auth._id, req.params.id]);
     if (removed) {
       const room = await deleteRoomService({
-        members: { $in: [req.auth._id, req.params.id] },
+        members: { $all: [req.auth._id, req.params.id] },
       });
       if (room) {
         await deleteAllMsgsService({ roomId: room?._id });
