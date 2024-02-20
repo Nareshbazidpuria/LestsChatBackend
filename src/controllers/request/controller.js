@@ -4,7 +4,7 @@ import {
   getSearchParams,
   responseMethod,
 } from "../../utils/common";
-import { addFriendService } from "../user/service";
+import { addFriendService, getUserService } from "../user/service";
 import {
   confirmReqService,
   createRoomService,
@@ -197,27 +197,28 @@ export const scanQr = async (req, res) => {
     const alreadyFriends = await getRoomService({
       members: { $all: [to, by] },
     });
-    if (alreadyFriends)
+    if (alreadyFriends) {
+      const friend = await getUserService({ _id: to });
       return responseMethod(
         res,
         responseCode.OK,
         "You are already friends",
         true,
-        alreadyFriends
+        { ...friend?._doc, room: { _id: alreadyFriends?._id } }
       );
+    }
     const [room] = await Promise.all([
       createRoomService({ members: [to, by] }),
       addFriendService(to, by),
       addFriendService(by, to),
     ]);
-    if (room)
-      return responseMethod(
-        res,
-        responseCode.OK,
-        "You are now friends",
-        true,
-        room
-      );
+    if (room) {
+      const friend = await getUserService({ _id: to });
+      return responseMethod(res, responseCode.OK, "You are now friends", true, {
+        ...friend?._doc,
+        room: { _id: room?._id },
+      });
+    }
   } catch (error) {
     console.log(error);
     return responseMethod(
