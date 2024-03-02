@@ -10,6 +10,7 @@ const storageEngine = multer.diskStorage({
 });
 
 const checkFileType = function (file, cb) {
+  console.log(file);
   const fileTypes = fileUploadConfig.FILE_TYPES; //check extension names
   const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
   const mimeType = fileTypes.test(file.mimetype);
@@ -23,7 +24,7 @@ const checkFileType = function (file, cb) {
 export const upload = multer({
   storage: storageEngine,
   limits: { fileSize: fileUploadConfig.FILE_SIZE },
-  fileFilter: (req, file, cb) => {
-    checkFileType(file, cb);
-  },
+  // fileFilter: (req, file, cb) => {
+  //   checkFileType(file, cb);
+  // },
 });

@@ -71,7 +71,7 @@ export const statusEnum = {
 };
 
 export const fileUploadConfig = {
-  FILE_SIZE: 5000000, //5MB
+  FILE_SIZE: 50000000, //50MB
   FILE_TYPES: /jpeg|jpg|png/,
 };
 
