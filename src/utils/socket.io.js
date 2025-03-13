@@ -16,7 +16,7 @@ export const io = Socket(http, {
   transports: ["polling", "websocket"],
   cors: {
     cors: {
-      origin: "http://localhost:4001",
+      origin: "*",
     },
   },
 });
@@ -79,8 +79,6 @@ io.on("connection", (socket) => {
   socket.on("join", (roomId) => socket.join(roomId));
   socket.on("leave", (roomId) => socket.leave(roomId));
 
-
-
   // console.log(`Socket Connected`, socket.id);
   // socket.on("room:join", (data) => {
   //   const { email, room } = data;
@@ -109,5 +107,4 @@ io.on("connection", (socket) => {
   //   console.log("peer:nego:done", ans);
   //   io.to(to).emit("peer:nego:final", { from: socket.id, ans });
   // });
-
 });
