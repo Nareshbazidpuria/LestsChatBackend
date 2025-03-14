@@ -2,26 +2,25 @@ import app from "../..";
 import { sendMessage } from "../controllers/message/controller";
 import { socketAuthentictaion } from "../middleware/socketAuthentictaion";
 import Socket from "socket.io";
-import { sendNotification } from "./push";
-import { getExpoTokens } from "../controllers/auth/service";
-import { ObjectId } from "mongodb";
+// import { sendNotification } from "./push";
+// import { getExpoTokens } from "../controllers/auth/service";
+// import { ObjectId } from "mongodb";
 const http = require("http").createServer(app);
 const PORT = 4001;
 http.listen(PORT);
 
-const emailToSocketIdMap = new Map();
-const socketidToEmailMap = new Map();
+// const emailToSocketIdMap = new Map();
+// const socketidToEmailMap = new Map();
 
 export const io = Socket(http, {
   transports: ["polling", "websocket"],
   cors: {
-    cors: {
-      origin: "*",
-    },
+    origin: "*", // Allow all origins (adjust as needed)
+    methods: ["GET", "POST"],
   },
 });
 
-export let socketIo;
+// export let socketIo;
 
 io.use(async (socket, next) => {
   const token = socket.handshake.auth.token || socket.handshake.headers.token;
@@ -33,7 +32,7 @@ io.use(async (socket, next) => {
 });
 
 io.on("connection", (socket) => {
-  socketIo = socket;
+  // socketIo = socket;
   socket.join(socket.auth._id.toString());
   socket.on("message", async ({ message, roomId }) => {
     const sent =
@@ -46,18 +45,18 @@ io.on("connection", (socket) => {
           });
     if (sent) {
       socket.in(roomId).emit("receive", sent);
-      if (roomId === "644d362526d8c8d7b063e6cb") return;
-      const to = (
-        await getExpoTokens({ _id: ObjectId(roomId) }, socket.auth._id)
-      )?.[0]?.tokens;
-      sendNotification({
-        to,
-        title: socket.auth.name + " sent a message",
-        body: message?.message,
-        sound: "default",
-      })
-        .then(() => "sent")
-        .catch((e) => console.log(e));
+      // if (roomId === "644d362526d8c8d7b063e6cb") return;
+      // const to = (
+      //   await getExpoTokens({ _id: ObjectId(roomId) }, socket.auth._id)
+      // )?.[0]?.tokens;
+      // sendNotification({
+      //   to,
+      //   title: socket.auth.name + " sent a message",
+      //   body: message?.message,
+      //   sound: "default",
+      // })
+      //   .then(() => "sent")
+      //   .catch((e) => console.log(e));
     }
   });
 

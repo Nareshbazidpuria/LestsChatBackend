@@ -1,7 +1,7 @@
 import { responseCode, responseMessage } from "../../../config/constant";
 import { getDefaultPagination, responseMethod } from "../../utils/common";
-import { socketIo } from "../../utils/socket.io";
-import { getRoomService } from "../request/service";
+// import { socketIo } from "../../utils/socket.io";
+// import { getRoomService } from "../request/service";
 import { updateUserService } from "../user/service";
 import { getMsgsService, readMsgsService, sendMsgService } from "./service";
 
@@ -66,8 +66,8 @@ export const readMsgs = async (req, res) => {
       );
     }
     const roomId = req.params.roomId.toString();
-    if (req.auth.lastJoined) socketIo.leave(req.auth.lastJoined.toString());
-    socketIo.join(roomId);
+    // if (req.auth.lastJoined) socketIo.leave(req.auth.lastJoined.toString());
+    // socketIo.join(roomId);
     await updateUserService({ _id: req.auth._id }, { lastJoined: roomId });
     if (roomId === "644d362526d8c8d7b063e6cb") {
       return responseMethod(
