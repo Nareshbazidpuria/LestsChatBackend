@@ -45,18 +45,18 @@ io.on("connection", (socket) => {
           });
     if (sent) {
       socket.in(roomId).emit("receive", sent);
-      // if (roomId === "644d362526d8c8d7b063e6cb") return;
-      // const to = (
-      //   await getExpoTokens({ _id: new ObjectId(roomId) }, socket.auth._id)
-      // )?.[0]?.tokens;
-      // sendNotification({
-      //   to,
-      //   title: socket.auth.name + " sent a message",
-      //   body: message?.message,
-      //   sound: "default",
-      // })
-      //   .then(() => "sent")
-      //   .catch((e) => console.log(e));
+      if (roomId === "644d362526d8c8d7b063e6cb") return;
+      const to = (
+        await getExpoTokens({ _id: new ObjectId(roomId) }, socket.auth._id)
+      )?.[0]?.tokens;
+      sendNotification({
+        to,
+        title: socket.auth.name + " sent a message",
+        body: message?.message,
+        sound: "default",
+      })
+        .then(() => "sent")
+        .catch((e) => console.log(e));
     }
   });
 
