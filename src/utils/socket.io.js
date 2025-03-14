@@ -2,9 +2,9 @@ import app from "../..";
 import { sendMessage } from "../controllers/message/controller";
 import { socketAuthentictaion } from "../middleware/socketAuthentictaion";
 import Socket from "socket.io";
-// import { sendNotification } from "./push";
-// import { getExpoTokens } from "../controllers/auth/service";
-// import { ObjectId } from "mongodb";
+import { sendNotification } from "./push";
+import { getExpoTokens } from "../controllers/auth/service";
+import { ObjectId } from "mongodb";
 const http = require("http").createServer(app);
 const PORT = 4001;
 http.listen(PORT);
@@ -46,17 +46,17 @@ io.on("connection", (socket) => {
     if (sent) {
       socket.in(roomId).emit("receive", sent);
       if (roomId === "644d362526d8c8d7b063e6cb") return;
-      const to = (
-        await getExpoTokens({ _id: new ObjectId(roomId) }, socket.auth._id)
-      )?.[0]?.tokens;
-      sendNotification({
-        to,
-        title: socket.auth.name + " sent a message",
-        body: message?.message,
-        sound: "default",
-      })
-        .then(() => "sent")
-        .catch((e) => console.log(e));
+      // const to = (
+      //   await getExpoTokens({ _id: new ObjectId(roomId) }, socket.auth._id)
+      // )?.[0]?.tokens;
+      // sendNotification({
+      //   to,
+      //   title: socket.auth.name + " sent a message",
+      //   body: message?.message,
+      //   sound: "default",
+      // })
+      //   .then(() => "sent")
+      //   .catch((e) => console.log(e));
     }
   });
 
@@ -75,7 +75,10 @@ io.on("connection", (socket) => {
   //   io.to(data.to).emit("callAccepted", data.signal);
   // });
 
-  socket.on("join", (roomId) => socket.join(roomId));
+  socket.on("join", (roomId) => {
+    socket.auth.lastJoined && socket.leave(socket.auth.lastJoined);
+    socket.join(roomId);
+  });
   socket.on("leave", (roomId) => socket.leave(roomId));
 
   // console.log(`Socket Connected`, socket.id);
