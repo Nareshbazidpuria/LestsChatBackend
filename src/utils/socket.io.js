@@ -47,7 +47,7 @@ io.on("connection", (socket) => {
       socket.in(roomId).emit("receive", sent);
       // if (roomId === "644d362526d8c8d7b063e6cb") return;
       // const to = (
-      //   await getExpoTokens({ _id: ObjectId(roomId) }, socket.auth._id)
+      //   await getExpoTokens({ _id: new ObjectId(roomId) }, socket.auth._id)
       // )?.[0]?.tokens;
       // sendNotification({
       //   to,

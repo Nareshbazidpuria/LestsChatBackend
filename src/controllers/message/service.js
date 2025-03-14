@@ -15,7 +15,7 @@ export const getMsgsService = (limit, skip, roomId, authId) =>
   Message.aggregate([
     {
       $match: {
-        roomId: ObjectId(roomId),
+        roomId: new ObjectId(roomId),
       },
     },
     {

@@ -56,7 +56,7 @@ export const getAllUsers = async (req, res) => {
 export const getUser = async (req, res) => {
   try {
     let user = await getUserInfoService(
-      { _id: ObjectId(req?.params?.id) },
+      { _id: new ObjectId(req?.params?.id) },
       req.auth
     );
     if (user?.length) {
